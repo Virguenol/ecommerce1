@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\MonitorOrder;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreOrderRequest;
@@ -80,29 +81,32 @@ class OrderController extends Controller
 
         $order->user_id = auth()->id();
 
-        if (request('payment_method') == 'paypal') {
+       if (request('payment_method') == 'paypal') {
             $order->payment_method = 'paypal';
         }
 
         $order->save();
 
+        //sava order items
+
+
         $cartItems = \Cart::session(auth()->id())->getContent();
 
-        foreach($cartItems as $item) {
+      foreach($cartItems as $item) {
             $order->items()->attach($item->id, ['price'=> $item->price, 'quantity'=> $item->quantity]);
         }
 
-        $order->generateSubOrders();
+       // $order->generateSubOrders();
 
         if (request('payment_method') == 'paypal') {
 
-            MonitorOrder::dispatch($order)->delay(now()->addMinutes(1));
+           // MonitorOrder::dispatch($order)->delay(now()->addMinutes(1));
 
             return redirect()->route('paypal.checkout', $order->id);
 
         }
 
-        \Cart::session(auth()->id())->clear();
+        //\Cart::session(auth()->id())->clear();
 
         return redirect()->route('home')->withMessage('Order has been placed');
         //

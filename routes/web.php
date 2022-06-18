@@ -1,10 +1,12 @@
 <?php
+namespace App;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PayPalController;
 
 
 /*
@@ -22,7 +24,7 @@ Route::redirect('/', '/home');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index')->middleware('auth');
 Route::get('/add-to-cart/{product}', [CartController::class, 'add'])->name('cart.add')->middleware('auth');
@@ -32,10 +34,13 @@ Route::get('/cart/checkout', [CartController::class, 'checkout'])->name('cart.ch
 
 Route::resource('orders', OrderController::class)->middleware('auth');
 
-Route::get('paypal/checkout', [PaylController::class, 'getExpressCheckout']);
-Route::get('paypal/checkout-success', [PaylController::class, 'getExpressCheckoutSuccess']);
+Route::get('paypal/checkout/{order}', [PayPalController::class, 'getExpressCheckout'])->name('paypal.checkout');
+Route::get('paypal/checkout-success/{order}', [PayPalController::class,'getExpressCheckoutSuccess'])->name('paypal.success');
+Route::get('paypal/checkout-cancel', [PayPalController::class,'cancelPage'])->name('paypal.cancel');
 
 //Route::get('/home', 'HomeController')->name('home');
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -92,6 +92,19 @@
                 </div>
             </div>
         </nav>
+        {{-- message success --}}
+        @if(session()->has('message'))
+             <div class="alert-success" role="alert">
+                 {{ session('message') }}
+             </div>
+        @endif
+
+        {{-- message error --}}
+        @if(session()->has('error'))
+             <div class="alert-danger" role="alert">
+                 {{ session('error') }}
+             </div>
+        @endif
 
         <main class="py-4 container" >
             @yield('content')
