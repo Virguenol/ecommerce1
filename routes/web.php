@@ -1,6 +1,7 @@
 <?php
 namespace App;
 
+use TCG\Voyager\Facades\Voyager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
@@ -49,3 +50,8 @@ Route::get('/dashboard', function () {
 require __DIR__.'/auth.php';
 
 
+
+
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});
