@@ -2,19 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\OrderPaid;
 use App\Models\Order;
-
-
+use App\Mail\OrderPaid;
 use Illuminate\Http\Request;
+
+
+use Srmklive\PayPal\Facades\PayPal;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use Srmklive\PayPal\Services\ExpressCheckout;
+use Srmklive\PayPal\Services\AdaptivePayments;
 
 class PayPalController extends Controller
 {
     public function getExpressCheckout($orderId)
     {
         $checkoutData = $this->checkoutData($orderId);
-        $provider = new ExpressCheckout;
+        $provider = PayPal::setProvider('express_checkout');
+       // $provider = new ExpressCheckout;
         $response = $provider->setExpressCheckout($checkoutData);
 
         return redirect($response['paypal_link']);
@@ -54,7 +59,7 @@ class PayPalController extends Controller
     {
         $token = $request('token');
         $payerId = $request->get('PayerID');
-        $provider = new ExpressCheckout;
+        $provider = PayPal::setProvider('express_checkout');
         $checkoutData = $this->checkoutDate($orderId);
 
         $response = $provider->getExpressCheckoutDetails($token);

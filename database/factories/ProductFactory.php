@@ -10,7 +10,7 @@ use Faker\Generator as Faker;
  */
 class ProductFactory extends Factory
 {
-    protected $model = Product::class;
+   // protected $model = Product::class;
     /**
      * Define the model's default state.
      *
@@ -20,7 +20,7 @@ class ProductFactory extends Factory
     {
         return [
             'name' => $this->faker->sentence(2),
-            'description' => $this->faker->sentence(20),
+            'description' => $this->faker->sentence(2),
             'price' => $this->faker->numberBetween(100, 5000),
         ];
     }
